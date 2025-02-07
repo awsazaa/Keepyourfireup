@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🔥 KEEP THE FIRE UP 🔥</title>
+    <style>
+        /* التصميم العام المتجاوب */
+        body {
+            background: #000;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+            height: 100vh;
+        }
+
+        /* مطر الإيموجيات المُبطّأ */
+        .emoji-rain {
+            position: fixed;
+            top: -100px;
+            width: 100%;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .fire {
+            color: #FF4500;
+            text-shadow: 0 0 25px #FF4500;
+            font-size: 28px;
+            position: absolute;
+            animation: fall 8s linear infinite !important;
+        }
+
+        .pepper {
+            color: #FF0000;
+            text-shadow: 0 0 20px #FF0000;
+            font-size: 24px;
+            animation: fall 10s linear infinite !important;
+        }
+
+        /* إطار الفيديو المتجاوب */
+        .video-wrapper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 560px;
+            aspect-ratio: 16/9;
+            z-index: 3;
+            border: 3px solid #FF0000;
+            border-radius: 15px;
+            box-shadow: 0 0 40px #FF0000;
+            background: #000;
+        }
+
+        /* النص الناري المُتحرك */
+        .fire-text {
+            position: fixed;
+            bottom: 8%;
+            width: 100%;
+            text-align: center;
+            font-size: 2.2rem;
+            color: #FF8C00;
+            animation: text-glow 1.5s ease-in-out infinite alternate;
+            z-index: 2;
+            text-shadow: 0 0 15px #FF4500;
+        }
+
+        /* الأنيميشنز */
+        @keyframes fall {
+            0% { transform: translateY(-150vh) rotate(0deg) scale(0.7); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(150vh) rotate(720deg) scale(1.5); opacity: 0; }
+        }
+
+        @keyframes text-glow {
+            from { text-shadow: 0 0 10px #FF4500; }
+            to { text-shadow: 0 0 40px #FF4500, 0 0 60px #FF4500; }
+        }
+
+        /* تعديلات الجوال */
+        @media (max-width: 768px) {
+            .fire { font-size: 22px; }
+            .pepper { font-size: 20px; }
+            .fire-text { font-size: 1.8rem; }
+            .video-wrapper { width: 95%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- مطر الإيموجيات -->
+    <div class="emoji-rain" id="rain"></div>
+
+    <!-- حاوية الفيديو -->
+    <div class="video-wrapper">
+        <iframe 
+            src="https://www.youtube.com/embed/5vGz1I_4AKI?start=76&autoplay=1&mute=0&playsinline=1&controls=0&modestbranding=1&rel=0" 
+            allow="autoplay; encrypted-media; accelerometer; gyroscope" 
+            frameborder="0" 
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- النص المتحرك -->
+    <div class="fire-text">KEEP THE FIRE UP</div>
+
+    <script>
+        // إنشاء المطر الناري
+        function createFireRain() {
+            const rain = document.getElementById('rain');
+            const emojis = ['🔥', '🌶️'];
+            
+            for (let i = 0; i < 80; i++) {
+                const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+                const element = document.createElement('div');
+                
+                element.className = emoji === '🔥' ? 'fire' : 'pepper';
+                element.style.left = `${Math.random() * 100}%`;
+                element.style.animationDelay = `${Math.random() * 5}s`;
+                element.textContent = emoji;
+                
+                rain.appendChild(element);
+            }
+        }
+
+        // بدء التشغيل عند التحميل
+        window.addEventListener('load', () => {
+            createFireRain();
+            
+            // إصلاح الصوت على iOS
+            const iframe = document.querySelector('iframe');
+            setTimeout(() => {
+                iframe.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'setVolume',
+                    args: [50]
+                }), '*');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
