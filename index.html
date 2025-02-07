@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>🔥 Keep Your Fire UPP 🔥</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            background: #000;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial Black', sans-serif;
+            animation: backgroundPulse 5s infinite alternate;
+        }
+        .emoji-rain {
+            position: fixed;
+            top: -50px;
+            width: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .fire {
+            color: #FF4500;
+            text-shadow: 0 0 20px #FF4500;
+            font-size: 40px;
+            position: absolute;
+            animation: flicker 0.5s infinite alternate;
+        }
+        .pepper {
+            color: #FF0000;
+            font-size: 35px;
+            text-shadow: 0 0 15px #FF0000;
+            animation: glow 1s infinite alternate, slowFall 8s linear infinite;
+        }
+        .video-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 3;
+            border: 4px solid #FF0000;
+            border-radius: 20px;
+            box-shadow: 0 0 50px #FF0000;
+        }
+        .fire-text {
+            position: fixed;
+            bottom: 50px;
+            width: 100%;
+            text-align: center;
+            font-size: 3em;
+            color: #FF8C00;
+            animation: fire 1.5s infinite, shake 0.5s infinite;
+            z-index: 2;
+            text-shadow: 0 0 20px #FF4500,
+                         0 0 30px #FF4500,
+                         0 0 40px #FF4500;
+        }
+        @keyframes fire {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(20deg); }
+        }
+        @keyframes fall {
+            0% { 
+                transform: translateY(-100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            20% { opacity: 1; }
+            100% { 
+                transform: translateY(100vh) rotate(720deg) scale(2);
+                opacity: 0;
+            }
+        }
+        @keyframes slowFall {
+            0% { transform: translateY(-100vh) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(720deg); }
+        }
+        @keyframes flicker {
+            from { opacity: 0.8; }
+            to { opacity: 1; }
+        }
+        @keyframes glow {
+            from { text-shadow: 0 0 5px #FF0000; }
+            to { text-shadow: 0 0 20px #FF0000; }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(5px); }
+        }
+        @keyframes backgroundPulse {
+            from { background-color: #000; }
+            to { background-color: #330000; }
+        }
+    </style>
+</head>
+<body>
+    <div class="emoji-rain" id="rain"></div>
+    <div class="video-container">
+        <iframe 
+            width="560" 
+            height="315" 
+            src="https://www.youtube.com/embed/5vGz1I_4AKI?start=76&autoplay=1&mute=1&enablejsapi=1&controls=0&modestbranding=1&playsinline=1" 
+            frameborder="0"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            id="ytPlayer"
+            playsinline>
+        </iframe>
+    </div>
+    <div class="fire-text">KEEP THE FIRE UP</div>
+    <audio id="sizzleSound" src="https://www.soundjay.com/button/beep-07.wav" preload="auto"></audio>
+    <script>
+        function createEmojiRain() {
+            const rain = document.getElementById('rain');
+            const sizzleSound = document.getElementById('sizzleSound');
+            for (let i = 0; i < 150; i++) {
+                const emoji = Math.random() > 0.2 ? '🔥' : '🌶️';
+                const element = document.createElement('div');
+                element.className = emoji === '🔥' ? 'fire' : 'pepper';
+                element.style.left = Math.random() * 100 + '%';
+                element.style.animation = emoji === '🌶️' 
+                    ? `slowFall ${Math.random() * 4 + 8}s linear infinite`
+                    : `fall ${Math.random() * 2 + 5}s linear infinite`;
+                element.textContent = emoji;
+
+                element.addEventListener('animationiteration', () => {
+                    if (emoji === '🌶️') {
+                        sizzleSound.currentTime = 0;
+                        sizzleSound.play();
+                    }
+                });
+
+                rain.appendChild(element);
+            }
+        }
+
+        const tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        const firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        let player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('ytPlayer', {
+                events: {
+                    'onReady': onPlayerReady
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            event.target.setVolume(50);
+            event.target.playVideo();
+        }
+
+        window.onload = createEmojiRain;
+    </script>
+</body>
+</html>
